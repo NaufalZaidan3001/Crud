@@ -20,7 +20,15 @@ class RestaurantLoginCheck extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-         if (!Auth::attempt($credentials)) {
+
+        // Clear any existing session before attempting login
+        if (Auth::check()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        if (!Auth::attempt($credentials)) {
             return back()->withErrors([
                 'email' => 'Invalid email or password.',
             ])->onlyInput('email');

@@ -28,7 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        // Admin redirect
+        if ($user && $user->role === 'admin') {
+            return redirect()->intended(route('admin.approval', absolute: false));
+        }
 
         // Only redirect to verification for customer users who haven't verified
         if ($user && ! $user->hasVerifiedEmail()) {

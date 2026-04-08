@@ -24,21 +24,10 @@ class AdminLoginController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             
-            // Check if user has admin role - adjust this based on your user model
-            // Option 1: If using roles
-            if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
+            // Check if user has admin role
+            if ($user->role === 'admin') {
                 $request->session()->regenerate();
-                return redirect()->intended('/admin/dashboard');
-            }
-            // // Option 2: If using a simple admin flag
-            // elseif ($user->is_admin ?? false) {
-            //     $request->session()->regenerate();
-            //     return redirect()->intended('/admin/dashboard');
-            // }
-            // // Option 3: If using role column
-            elseif ($user->role === 'admin') {
-                $request->session()->regenerate();
-                return redirect()->intended('/admin/dashboard');
+                return redirect()->intended(route('admin.approval'));
             }
             else {
                 Auth::logout();

@@ -13,6 +13,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\Restaurant\RestaurantRegisterController;
 use App\Http\Controllers\Auth\Restaurant\RestaurantLoginCheck;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\Restaurant\RestaurantDashboardController;
 
 Route::view('/', 'auth.welcome')->name('beranda');
 
@@ -75,8 +78,17 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified_or_admin'])->group(function () {
-Route::view('/user/dashboard', 'user.dashboard')->name('dashboard');
-Route::view('/restaurant/pending', 'auth.restaurant-pending')->name('restaurant.pending');
+    Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/restaurant/dashboard', [RestaurantDashboardController::class, 'index'])->name('restaurant.dashboard');
+    Route::view('/restaurant/pending', 'auth.restaurant-pending')->name('restaurant.pending');
+
+    // Menu routes — shared between customers (view/show) and restaurant owners (full CRUD)
+    Route::resource('menu', MenuController::class);
+
+    // Basket placeholder — to be implemented later
+    Route::post('/basket/add/{menu}', function (\App\Models\Menu $menu) {
+        return back()->with('success', 'Added "' . $menu->item_name . '" to basket! (Basket coming soon)');
+    })->name('basket.add');
 });
 
 // Route::middleware(['auth', 'verified_or_admin'])->prefix('admin')->name('admin.')->group(function () {
