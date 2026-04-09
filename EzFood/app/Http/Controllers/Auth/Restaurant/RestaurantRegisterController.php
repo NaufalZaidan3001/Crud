@@ -49,13 +49,13 @@ class RestaurantRegisterController extends Controller
             'phone' => $request->phone,
         ]);
 
-        // Create restaurant with pending status (default from migration)
+        // Create restaurant with pending status
         $user->restaurant()->create([
             'restaurant_name' => $request->restaurant_name,
             'description' => $request->description,
             'address' => $request->address,
             'phone' => $request->phone,
-            // status will be 'pending' by default from migration
+            'status' => 'pending',
         ]);
 
         event(new Registered($user));

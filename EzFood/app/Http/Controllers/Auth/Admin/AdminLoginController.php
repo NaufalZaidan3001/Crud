@@ -23,13 +23,12 @@ class AdminLoginController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
-            
+
             // Check if user has admin role
             if ($user->role === 'admin') {
                 $request->session()->regenerate();
-                return redirect()->intended(route('admin.approval'));
-            }
-            else {
+                return redirect()->intended(route('admin.dashboard'));
+            } else {
                 Auth::logout();
                 throw ValidationException::withMessages([
                     'email' => 'You do not have admin privileges.',

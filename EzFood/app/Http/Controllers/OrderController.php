@@ -27,6 +27,11 @@ class OrderController extends Controller
                 ->addColumn('restaurant_name', function ($order) {
                     return $order->restaurant->restaurant_name ?? 'Unknown';
                 })
+                ->filterColumn('restaurant_name', function($query, $keyword) {
+                    $query->whereHas('restaurant', function($q) use($keyword) {
+                        $q->where('restaurant_name', 'like', "%{$keyword}%");
+                    });
+                })
                 ->addColumn('total_formatted', function ($order) {
                     return 'Rp ' . number_format($order->total_price, 0, ',', '.');
                 })

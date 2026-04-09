@@ -20,7 +20,7 @@ class Approval extends Controller
         $restaurant->status = 'approved';
         $restaurant->save();
 
-        return redirect()->route('admin.approval')->with('success', 'Restaurant approved successfully.');
+        return redirect()->route('admin.dashboard')->with('success', 'Restaurant approved successfully.');
     }
 
     public function reject($id)
@@ -29,6 +29,6 @@ class Approval extends Controller
         $restaurant->status = 'rejected';
         $restaurant->save();
 
-        return redirect()->route('admin.approval')->with('success', 'Restaurant rejected successfully.');
+        return redirect()->route('admin.dashboard')->with('success', 'Restaurant rejected successfully.');
     }
 }

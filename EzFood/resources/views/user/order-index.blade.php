@@ -36,31 +36,64 @@
             <x-layout.footer />
         </div>
     </div>
-    
+
     <script src="{{ asset('global_assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#orders-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('order.index') }}',
-                columns: [
-                    { data: 'id', name: 'id', render: function(data) { return '#' + data; } },
-                    { data: 'restaurant_name', name: 'restaurant_name', orderable: false },
-                    { data: 'total_formatted', name: 'total_price', orderable: false, searchable: false },
-                    { data: 'status_badge', name: 'status', orderable: false, searchable: false },
-                    { data: 'actions', name: 'actions', orderable: false, searchable: false }
+                ajax: "{{ route('order.index') }}",
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        render: function(data) {
+                            return '#' + data;
+                        }
+                    },
+                    {
+                        data: 'restaurant_name',
+                        name: 'restaurant_name',
+                        orderable: false,
+                        searchable: true
+                    },
+                    {
+                        data: 'total_formatted',
+                        name: 'total_price',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'status_badge',
+                        name: 'status',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'actions',
+                        name: 'actions',
+                        orderable: false,
+                        searchable: false
+                    }
                 ],
-                order: [[0, 'desc']],
+                order: [
+                    [0, 'desc']
+                ],
                 dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
                 language: {
                     search: '<span>Filter:</span> _INPUT_',
-                    searchPlaceholder: 'Search Order ID...',
+                    searchPlaceholder: 'Search Order ID or Restaurant',
                     lengthMenu: '<span>Show:</span> _MENU_',
-                    paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                    paginate: {
+                        'first': 'First',
+                        'last': 'Last',
+                        'next': '&rarr;',
+                        'previous': '&larr;'
+                    }
                 }
             });
         });
     </script>
 </body>
+
 </html>

@@ -35,12 +35,14 @@ class RestaurantDashboardController extends Controller
                     }
                 })
                 ->addColumn('actions', function ($menu) {
+                    $showUrl = route('menu.show', $menu);
                     $editUrl = route('menu.edit', $menu);
                     $deleteUrl = route('menu.destroy', $menu);
                     $csrf = csrf_field();
                     $method = method_field('DELETE');
                     
                     return '
+                        <a href="'.$showUrl.'" class="btn btn-sm btn-light rounded-pill mr-1">View</a>
                         <a href="'.$editUrl.'" class="btn btn-sm btn-info rounded-pill mr-1">Edit</a>
                         <form action="'.$deleteUrl.'" method="POST" class="d-inline" onsubmit="return confirm(\'Delete this item?\')">
                             '.$csrf.'

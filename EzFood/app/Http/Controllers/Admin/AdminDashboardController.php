@@ -11,8 +11,6 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
-
         $totalRestaurants = Restaurant::count();
         $pendingRestaurants = Restaurant::where('status', 'pending')->count();
         $approvedRestaurants = Restaurant::where('status', 'approved')->count();

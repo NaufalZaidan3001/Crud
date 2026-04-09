@@ -8,7 +8,13 @@
         <x-layout.sidebar-panel />
         
         <div class="content-wrapper">
-            <x-layout.page-header title="Item Details" :breadcrumbs="['Menu', 'Details']" />
+            @php
+                $backUrl = Auth::user()->role === 'restaurant' 
+                    ? route('restaurant.dashboard') 
+                    : route('menu.index', ['restaurant' => $menu->restaurant_id]);
+                $backLabel = Auth::user()->role === 'restaurant' ? 'Restaurant Dashboard' : 'Menu';
+            @endphp
+            <x-layout.page-header title="Item Details" :breadcrumbs="[$backLabel => $backUrl, 'Details']" />
 
             <div class="content">
                 <div class="row">
@@ -76,7 +82,7 @@
                                     @endif
 
                                     <div class="ml-auto">
-                                        <a href="{{ url()->previous() }}" class="btn btn-light rounded-pill"><i class="icon-arrow-left52 mr-1"></i> Back</a>
+                                        <a href="{{ $backUrl }}" class="btn btn-light rounded-pill"><i class="icon-arrow-left52 mr-1"></i> Back</a>
                                     </div>
                                 </div>
                             </div>

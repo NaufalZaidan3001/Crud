@@ -88,7 +88,7 @@
             $('#menus-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('restaurant.dashboard') }}',
+                ajax: "{{ route('restaurant.dashboard') }}",
                 columns: [
                     { data: 'id', name: 'id', orderable: false, searchable: false, render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;

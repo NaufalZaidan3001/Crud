@@ -24,14 +24,7 @@
                             </a>
                             @endif
                         </li>
-                        @if(Auth::check() && Auth::user()->role === 'restaurant')
-                        <li class="nav-item">
-                            <a href="{{ route('menu.index') }}" class="nav-link {{ request()->routeIs('menu.*') ? 'active' : '' }}">
-                                <i class="icon-list"></i>
-                                <span>Menu</span>
-                            </a>
-                        </li>
-                        @endif
+
                         <li class="nav-item">
                             <a href="{{ route('order.index') }}" class="nav-link {{ request()->routeIs('order.*') ? 'active' : '' }}">
                                 <i class="icon-cart2"></i>

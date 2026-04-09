@@ -110,6 +110,8 @@ Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin
 
 // Protected admin routes
 Route::middleware(['auth', 'verified_or_admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::post('/admin/dashboard/updateStatus/{id}', [AdminDashboardController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::get('/admin/approval', [Approval::class, 'index'])->name('admin.approval');
     Route::post('/admin/approval/{id}/approve', [Approval::class, 'approve'])->name('admin.approval.approve');
     Route::post('/admin/approval/{id}/reject', [Approval::class, 'reject'])->name('admin.approval.reject');

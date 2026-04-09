@@ -19,11 +19,11 @@
         <div class="d-flex">
             <div class="breadcrumb">
                 <a href="{{ route('dashboard') }}" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
-                @foreach($breadcrumbs as $crumb)
+                @foreach($breadcrumbs as $key => $crumb)
                 @if($loop->last)
-                <span class="breadcrumb-item active">{{ $crumb }}</span>
+                <span class="breadcrumb-item active">{{ is_numeric($key) ? $crumb : $key }}</span>
                 @else
-                <a href="#" class="breadcrumb-item">{{ $crumb }}</a>
+                <a href="{{ is_numeric($key) ? '#' : $crumb }}" class="breadcrumb-item">{{ is_numeric($key) ? $crumb : $key }}</a>
                 @endif
                 @endforeach
             </div>
