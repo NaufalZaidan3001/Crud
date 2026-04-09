@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
 
         // Admin redirect
         if ($user && $user->role === 'admin') {
-            return redirect()->intended(route('admin.approval', absolute: false));
+            return redirect()->intended(route('admin.dashboard', absolute: false));
         }
 
         // Only redirect to verification for customer users who haven't verified

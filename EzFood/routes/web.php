@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\Approval;
 use App\Http\Controllers\Auth\Admin\AdminLoginController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
@@ -112,7 +111,6 @@ Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin
 Route::middleware(['auth', 'verified_or_admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/dashboard/updateStatus/{id}', [AdminDashboardController::class, 'updateStatus'])->name('admin.orders.updateStatus');
-    Route::get('/admin/approval', [Approval::class, 'index'])->name('admin.approval');
-    Route::post('/admin/approval/{id}/approve', [Approval::class, 'approve'])->name('admin.approval.approve');
-    Route::post('/admin/approval/{id}/reject', [Approval::class, 'reject'])->name('admin.approval.reject');
+    Route::post('/admin/approval/{id}/approve', [AdminDashboardController::class, 'approveRestaurant'])->name('admin.approval.approve');
+    Route::post('/admin/approval/{id}/reject', [AdminDashboardController::class, 'rejectRestaurant'])->name('admin.approval.reject');
 });

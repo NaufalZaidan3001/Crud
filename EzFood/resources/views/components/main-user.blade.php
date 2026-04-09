@@ -14,7 +14,7 @@
                                 <i class="icon-home4"></i> <span>Restaurant Dashboard</span>
                             </a>
                             @elseif(Auth::check() && Auth::user()->role === 'admin')
-                            <a href="{{ route('admin.approval') }}" class="nav-link {{ request()->routeIs('admin.approval') ? 'active' : '' }}">
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                                 <i class="icon-shield-check"></i> <span>Admin Dashboard</span>
                             </a>
                             @else
