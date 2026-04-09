@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +12,7 @@ class Approval extends Controller
     {
         $pendingRestaurants = Restaurant::where('status', 'pending')->get();
 
-        return view('admin.approval', compact('pendingRestaurants'));
+        return view('admin.dashboard', compact('pendingRestaurants'));
     }
 
     public function approve($id)
