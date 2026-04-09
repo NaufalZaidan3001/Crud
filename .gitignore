@@ -1,2 +1,12 @@
+# Root-level files (not part of EzFood project)
 /backend-template-limitless
+/composer.json
+/composer.lock
 /laravel.log
+/vendor
+
+# EzFood project ignores
+/EzFood/vendor
+/EzFood/node_modules
+/EzFood/public/build
+/EzFood/storage/framework/cache

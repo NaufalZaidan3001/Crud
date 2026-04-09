@@ -15,7 +15,6 @@
         <!-- Main content -->
         <div class="content-wrapper">
 
-            <x-layout.page-header title="Customer Dashboard" :breadcrumbs="['Customer Dashboard']" />
 
             <!-- Content area -->
             <div class="content">

@@ -1,91 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Add Menu Item</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-</head>
-<body class="bg-gray-100 min-h-screen">
+<x-layout.head title="Add Menu Item" />
 
-<div class="container mx-auto mt-10 mb-10 px-6 max-w-2xl">
+<body>
+    <x-layout.navbar />
+    <div class="page-content">
+        <x-layout.sidebar-panel />
+        
+        <div class="content-wrapper">
+            <x-layout.page-header title="Add Menu Item" :breadcrumbs="['Menu', 'Add Item']" />
 
-    <div class="mb-6">
-        <a href="{{ route('menu.index') }}" class="text-blue-600 text-sm hover:underline">&larr; Back to Menu</a>
-        <h1 class="text-3xl font-bold text-gray-800 mt-2">Add Menu Item</h1>
+            <div class="content">
+                <div class="card">
+                    <div class="card-header header-elements-inline">
+                        <h6 class="card-title font-weight-bold"><i class="icon-plus2 mr-2 text-primary"></i> Add New Dish</h6>
+                    </div>
+
+                    <div class="card-body border-top">
+                        <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label font-weight-semibold">Item Name <span class="text-danger">*</span></label>
+                                <div class="col-lg-10">
+                                    <input type="text" name="item_name" value="{{ old('item_name') }}" class="form-control @error('item_name') is-invalid @enderror" placeholder="e.g. Nasi Goreng Spesial">
+                                    @error('item_name') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label font-weight-semibold">Description</label>
+                                <div class="col-lg-10">
+                                    <textarea name="description" rows="3" class="form-control @error('description') is-invalid @enderror" placeholder="Describe the dish...">{{ old('description') }}</textarea>
+                                    @error('description') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label font-weight-semibold">Price (Rp) <span class="text-danger">*</span></label>
+                                <div class="col-lg-10">
+                                    <input type="number" name="price" value="{{ old('price') }}" class="form-control @error('price') is-invalid @enderror" placeholder="e.g. 25000" min="0" step="500">
+                                    @error('price') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label font-weight-semibold">Image</label>
+                                <div class="col-lg-10">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                                        <label class="custom-file-label" for="image">Choose file</label>
+                                    </div>
+                                    @error('image') <span class="invalid-feedback d-block">{{ $message }}</span> @enderror
+                                    <span class="form-text text-muted">Accepted formats: gif, png, jpg, webp.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label font-weight-semibold">Availability</label>
+                                <div class="col-lg-10 mt-1">
+                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="checkbox" class="custom-control-input" name="availability" id="availability" value="1" {{ old('availability', true) ? 'checked' : '' }}>
+                                        <label class="custom-control-label" for="availability">Available for ordering</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-right mt-4 pt-3 border-top">
+                                <a href="{{ route('menu.index') }}" class="btn btn-light rounded-pill mr-2"><i class="icon-cross2 mr-1"></i> Cancel</a>
+                                <button type="submit" class="btn btn-primary rounded-pill font-weight-bold"><i class="icon-checkmark3 mr-1"></i> Save Item</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <x-layout.footer />
+        </div>
     </div>
-
-    <div class="bg-white rounded-xl shadow-sm p-8">
-        <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            {{-- Item Name --}}
-            <div class="mb-5">
-                <label for="item_name" class="block text-sm font-medium text-gray-700 mb-1">Item Name <span class="text-red-500">*</span></label>
-                <input type="text" name="item_name" id="item_name"
-                       value="{{ old('item_name') }}"
-                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('item_name') border-red-500 @enderror"
-                       placeholder="e.g. Nasi Goreng Spesial">
-                @error('item_name')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Description --}}
-            <div class="mb-5">
-                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea name="description" id="description" rows="3"
-                          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('description') border-red-500 @enderror"
-                          placeholder="Describe the dish...">{{ old('description') }}</textarea>
-                @error('description')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Price --}}
-            <div class="mb-5">
-                <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (Rp) <span class="text-red-500">*</span></label>
-                <input type="number" name="price" id="price"
-                       value="{{ old('price') }}"
-                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('price') border-red-500 @enderror"
-                       placeholder="e.g. 25000" min="0" step="500">
-                @error('price')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Image --}}
-            <div class="mb-5">
-                <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                <input type="file" name="image" id="image" accept="image/*"
-                       class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                @error('image')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Availability --}}
-            <div class="mb-6 flex items-center gap-3">
-                <input type="checkbox" name="availability" id="availability" value="1"
-                       {{ old('availability', true) ? 'checked' : '' }}
-                       class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-                <label for="availability" class="text-sm font-medium text-gray-700">Available for ordering</label>
-            </div>
-
-            <div class="flex justify-end gap-3">
-                <a href="{{ route('menu.index') }}"
-                   class="px-5 py-2.5 text-sm text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition">
-                    Cancel
-                </a>
-                <button type="submit" id="submit-create-btn"
-                        class="px-5 py-2.5 text-sm text-white bg-blue-600 rounded-full hover:bg-blue-700 transition shadow">
-                    Add Item
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
+    <script>
+        $('.custom-file-input').on('change',function(){
+            var fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').html(fileName);
+        })
+    </script>
 </body>
 </html>

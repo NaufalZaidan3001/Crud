@@ -9,18 +9,34 @@
                             <div class="text-uppercase font-size-xs line-height-xs">Main</div>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link">
+                            @if(Auth::check() && Auth::user()->role === 'restaurant')
+                            <a href="{{ route('restaurant.dashboard') }}" class="nav-link {{ request()->routeIs('restaurant.dashboard') ? 'active' : '' }}">
+                                <i class="icon-home4"></i> <span>Restaurant Dashboard</span>
+                            </a>
+                            @elseif(Auth::check() && Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.approval') }}" class="nav-link {{ request()->routeIs('admin.approval') ? 'active' : '' }}">
+                                <i class="icon-shield-check"></i> <span>Admin Dashboard</span>
+                            </a>
+                            @else
+                            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                                 <i class="icon-home4"></i>
-                                <span>Dashboard</span>
+                                <span>Restaurant</span>
+                            </a>
+                            @endif
+                        </li>
+                        @if(Auth::check() && Auth::user()->role === 'restaurant')
+                        <li class="nav-item">
+                            <a href="{{ route('menu.index') }}" class="nav-link {{ request()->routeIs('menu.*') ? 'active' : '' }}">
+                                <i class="icon-list"></i>
+                                <span>Menu</span>
                             </a>
                         </li>
-                        <li class="nav-item nav-item-submenu">
-                            <a href="#" class="nav-link"><i class="icon-shopping-cart"></i> <span>Orders</span></a>
-                            <ul class="nav nav-group-sub" data-submenu-title="Orders">
-                                <li class="nav-item"><a href="#" class="nav-link">View Orders</a></li>
-                                <li class="nav-item"><a href="#" class="nav-link">Finished Orders</a></li>
-                                <li class="nav-item"><a href="#" class="nav-link">Cancelled Orders</a></li>
-                            </ul>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('order.index') }}" class="nav-link {{ request()->routeIs('order.*') ? 'active' : '' }}">
+                                <i class="icon-cart2 mr-2"></i>
+                                <span>Orders</span>
+                            </a>
                         </li>
 
                         <!-- /main -->

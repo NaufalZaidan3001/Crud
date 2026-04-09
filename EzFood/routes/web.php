@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\Approval;
+use App\Http\Controllers\Auth\Admin\AdminLoginController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -13,8 +15,10 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\Restaurant\RestaurantRegisterController;
 use App\Http\Controllers\Auth\Restaurant\RestaurantLoginCheck;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Restaurant\RestaurantDashboardController;
 
 Route::view('/', 'auth.welcome')->name('beranda');
@@ -85,19 +89,16 @@ Route::middleware(['auth', 'verified_or_admin'])->group(function () {
     // Menu routes — shared between customers (view/show) and restaurant owners (full CRUD)
     Route::resource('menu', MenuController::class);
 
-    // Basket placeholder — to be implemented later
-    Route::post('/basket/add/{menu}', function (\App\Models\Menu $menu) {
-        return back()->with('success', 'Added "' . $menu->item_name . '" to basket! (Basket coming soon)');
-    })->name('basket.add');
+    // Order routes (customers and restaurants rely on this)
+    Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('order.show');
+
+    // Cart and Checkout routes
+    Route::post('/basket/add/{menu}', [CartController::class, 'add'])->name('basket.add');
+    Route::post('/basket/remove/{id}', [CartController::class, 'remove'])->name('basket.remove');
+    Route::post('/basket/clear', [CartController::class, 'clear'])->name('basket.clear');
+    Route::post('/basket/checkout', [CartController::class, 'checkout'])->name('basket.checkout');
 });
-
-// Route::middleware(['auth', 'verified_or_admin'])->prefix('admin')->name('admin.')->group(function () {
-//     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-// });
-
-// Admin routes
-use App\Http\Controllers\Auth\Admin\AdminLoginController;
-use App\Http\Controllers\Admin\Approval;
 
 // Admin login routes (no auth required)
 Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');

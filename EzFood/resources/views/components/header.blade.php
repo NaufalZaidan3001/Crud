@@ -21,6 +21,12 @@
 
         <ul class="navbar-nav ml-md-auto">
             @auth
+            <li class="nav-item">
+                <a href="{{ route('order.index') }}" class="navbar-nav-link">
+                    <i class="icon-cart2 mr-2"></i>
+                    Orders
+                </a>
+            </li>
             <li class="nav-item dropdown">
                 <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
                     <i class="icon-user mr-2"></i>

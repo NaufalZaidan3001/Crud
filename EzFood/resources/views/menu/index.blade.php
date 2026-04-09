@@ -1,139 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
+<x-layout.head title="Menu List" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Menu List</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-</head>
+<body>
 
-<body class="bg-gray-100 min-h-screen">
+    <x-layout.navbar />
 
-    <div class="container mx-auto mt-10 mb-10 px-6">
+    <div class="page-content">
 
-        {{-- Page Header --}}
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">
-                @if(Auth::user()->role === 'restaurant') My Menu @else Browse Menu @endif
-            </h1>
+        <x-layout.sidebar-panel />
 
-            @if(Auth::user()->role === 'restaurant')
-            <a href="{{ route('menu.create') }}"
-                class="px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-full shadow hover:bg-blue-700 transition"
-                id="add-menu-btn">
-                + Add Menu Item
-            </a>
-            @endif
-        </div>
+        <div class="content-wrapper">
 
-        {{-- Flash Message --}}
-        @if(session('success'))
-        <div class="mb-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300">
-            {{ session('success') }}
-        </div>
-        @endif
+            <x-layout.page-header title="Menu" :breadcrumbs="['Menu']" />
 
-        {{-- Menu Grid (Customer View) --}}
-        @if(Auth::user()->role !== 'restaurant')
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @forelse($menus as $menu)
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
-                @if($menu->image)
-                <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->item_name }}"
-                    class="w-full h-48 object-cover">
-                @else
-                <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400 text-sm">No Image</div>
+            <div class="content">
+
+                @if(session('success'))
+                <div class="alert alert-success alert-styled-left alert-arrow-left alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                    <span class="font-weight-semibold">Success!</span> {{ session('success') }}
+                </div>
                 @endif
 
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-800 text-lg">{{ $menu->item_name }}</h3>
-                    <p class="text-gray-500 text-sm mt-1 line-clamp-2">{{ $menu->description ?? 'No description.' }}</p>
-                    <div class="flex items-center justify-between mt-4">
-                        <span class="text-blue-600 font-bold">Rp {{ number_format($menu->price, 0, ',', '.') }}</span>
-                        <a href="{{ route('menu.show', $menu) }}"
-                            class="px-4 py-2 bg-blue-600 text-white text-xs font-medium rounded-full hover:bg-blue-700 transition"
-                            id="view-menu-{{ $menu->id }}-btn">
-                            View Details
-                        </a>
+                <div class="card">
+                    <div class="card-header header-elements-sm-inline">
+                        <h6 class="card-title font-weight-bold">
+                            <i class="icon-list mr-2 text-primary"></i> 
+                            @if(Auth::user()->role === 'restaurant') My Menu @else Browse Menu @endif
+                        </h6>
+                        <div class="header-elements">
+                            @if(Auth::user()->role === 'restaurant')
+                            <a href="{{ route('menu.create') }}" class="btn btn-primary btn-sm rounded-pill font-weight-bold">
+                                <i class="icon-plus2 mr-1"></i> Add Menu Item
+                            </a>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        {{-- Customer Grid View --}}
+                        @if(Auth::user()->role !== 'restaurant')
+                            @if($menus->isEmpty())
+                                <div class="text-center py-5 text-muted">
+                                    <i class="icon-list icon-3x d-block mb-3"></i>
+                                    <p>No menu items available right now.</p>
+                                </div>
+                            @else
+                                <div class="row">
+                                    @foreach($menus as $menu)
+                                    <div class="col-sm-6 col-xl-4 mb-4">
+                                        <div class="card h-100" style="border-radius: 10px; overflow: hidden; transition: box-shadow 0.2s;">
+                                            @if($menu->image)
+                                                <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->item_name }}" style="height: 160px; object-fit: cover; width: 100%;">
+                                            @else
+                                                <div style="height: 160px; background: #e0e0e0; display: flex; align-items: center; justify-content: center;">
+                                                    <span class="text-muted"><i class="icon-image2 icon-2x"></i></span>
+                                                </div>
+                                            @endif
+                                            <div class="card-body d-flex flex-column">
+                                                <h6 class="card-title font-weight-bold mb-1">{{ $menu->item_name }}</h6>
+                                                <p class="text-muted font-size-sm mb-3 flex-grow-1">
+                                                    {{ Str::limit($menu->description, 60, '...') ?? 'No description.' }}
+                                                </p>
+                                                <div class="d-flex align-items-center justify-content-between mt-auto">
+                                                    <span class="text-primary font-weight-bold">Rp {{ number_format($menu->price, 0, ',', '.') }}</span>
+                                                    <a href="{{ route('menu.show', $menu) }}" class="btn btn-sm btn-primary rounded-pill">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <div class="mt-3">{{ $menus->links() }}</div>
+                            @endif
+                        
+                        {{-- Restaurant Table View --}}
+                        @else
+                            @if($menus->isEmpty())
+                                <div class="text-center py-5 text-muted">
+                                    <i class="icon-list icon-3x d-block mb-3"></i>
+                                    <p>No menu items yet. <a href="{{ route('menu.create') }}">Add your first item!</a></p>
+                                </div>
+                            @else
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item Name</th>
+                                                <th>Price</th>
+                                                <th>Availability</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($menus as $menu)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td class="font-weight-semibold">{{ $menu->item_name }}</td>
+                                                <td>Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
+                                                <td>
+                                                    @if($menu->availability)
+                                                        <span class="badge badge-success">Available</span>
+                                                    @else
+                                                        <span class="badge badge-danger">Unavailable</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('menu.show', $menu) }}" class="btn btn-sm btn-light rounded-pill mr-1"><i class="icon-eye"></i> View</a>
+                                                    <a href="{{ route('menu.edit', $menu) }}" class="btn btn-sm btn-info rounded-pill mr-1"><i class="icon-pencil5"></i> Edit</a>
+                                                    <form action="{{ route('menu.destroy', $menu) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this menu item?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-sm btn-danger rounded-pill"><i class="icon-trash"></i> Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-3">{{ $menus->links() }}</div>
+                            @endif
+                        @endif
                     </div>
                 </div>
-            </div>
-            @empty
-            <div class="col-span-3 text-center py-16 text-gray-400">No menu items available.</div>
-            @endforelse
-        </div>
 
-        {{-- Menu Table (Restaurant View) --}}
-        @else
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600">
-                    <thead class="bg-gray-50 text-xs uppercase text-gray-500 border-b">
-                        <tr>
-                            <th class="px-6 py-4">No</th>
-                            <th class="px-6 py-4">Item Name</th>
-                            <th class="px-6 py-4">Price</th>
-                            <th class="px-6 py-4">Availability</th>
-                            <th class="px-6 py-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse($menus as $menu)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4">{{ $loop->iteration }}</td>
-                            <td class="px-6 py-4 font-medium text-gray-800">{{ $menu->item_name }}</td>
-                            <td class="px-6 py-4">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4">
-                                @if($menu->availability)
-                                <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Available</span>
-                                @else
-                                <span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">Unavailable</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    <a href="{{ route('menu.show', $menu) }}"
-                                        id="show-menu-{{ $menu->id }}-btn"
-                                        class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full hover:bg-gray-200 transition">
-                                        View
-                                    </a>
-                                    <a href="{{ route('menu.edit', $menu) }}"
-                                        id="edit-menu-{{ $menu->id }}-btn"
-                                        class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs rounded-full hover:bg-blue-200 transition">
-                                        Edit
-                                    </a>
-                                    <form action="{{ route('menu.destroy', $menu) }}" method="POST"
-                                        onsubmit="return confirm('Delete this menu item?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            id="delete-menu-{{ $menu->id }}-btn"
-                                            class="px-3 py-1.5 bg-red-100 text-red-700 text-xs rounded-full hover:bg-red-200 transition">
-                                            Delete
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-10 text-center text-gray-400">No menu items yet.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
             </div>
-        </div>
-        @endif
 
-        {{-- Pagination --}}
-        <div class="mt-6">
-            {{ $menus->links() }}
+            <x-layout.footer />
+
         </div>
     </div>
 
 </body>
-
 </html>
