@@ -67,7 +67,7 @@
                             </div>
 
                             <div class="text-right mt-4 pt-3 border-top">
-                                <a href="{{ route('menu.index') }}" class="btn btn-light rounded-pill mr-2"><i class="icon-cross2 mr-1"></i> Cancel</a>
+                                <a href="{{ route('restaurant.dashboard') }}" class="btn btn-light rounded-pill mr-2"><i class="icon-cross2 mr-1"></i> Cancel</a>
                                 <button type="submit" class="btn btn-primary rounded-pill font-weight-bold"><i class="icon-checkmark3 mr-1"></i> Save Item</button>
                             </div>
                         </form>

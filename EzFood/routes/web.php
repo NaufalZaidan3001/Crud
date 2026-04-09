@@ -25,60 +25,60 @@ Route::view('/', 'auth.welcome')->name('beranda');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('login');
+        ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
     Route::get('register', [RegisteredUserController::class, 'create'])
-                ->name('register');
+        ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
     Route::get('restaurant/register', [RestaurantRegisterController::class, 'create'])
-                ->name('restaurant.register');
+        ->name('restaurant.register');
 
     Route::post('restaurant/register', [RestaurantRegisterController::class, 'store']);
 
     Route::get('restaurant/login', [RestaurantLoginCheck::class, 'showRestaurantLogin'])
-                ->name('restaurant.login');
+        ->name('restaurant.login');
 
     Route::post('restaurant/login', [RestaurantLoginCheck::class, 'loginRestaurant'])
-                ->name('restaurant.login.submit');
+        ->name('restaurant.login.submit');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-                ->name('password.request');
+        ->name('password.request');
 
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-                ->name('password.email');
+        ->name('password.email');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-                ->name('password.reset');
+        ->name('password.reset');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
-                ->name('password.store');
+        ->name('password.store');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
-                ->name('verification.notice');
+        ->name('verification.notice');
 
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-                ->middleware(['signed', 'throttle:6,1'])
-                ->name('verification.verify');
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
 
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-                ->middleware('throttle:6,1')
-                ->name('verification.send');
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-                ->name('password.confirm');
+        ->name('password.confirm');
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
+        ->name('logout');
 });
 
 Route::middleware(['auth', 'verified_or_admin'])->group(function () {
@@ -92,6 +92,10 @@ Route::middleware(['auth', 'verified_or_admin'])->group(function () {
     // Order routes (customers and restaurants rely on this)
     Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('order.show');
+    Route::post('/orders/{order}/accept', [OrderController::class, 'accept'])->name('order.accept');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+    Route::get('/orders/{order}/export-pdf', [OrderController::class, 'exportPdf'])->name('order.export.pdf');
+    Route::get('/orders/{order}/export-excel', [OrderController::class, 'exportExcel'])->name('order.export.excel');
 
     // Cart and Checkout routes
     Route::post('/basket/add/{menu}', [CartController::class, 'add'])->name('basket.add');

@@ -76,7 +76,7 @@
                                     @endif
 
                                     <div class="ml-auto">
-                                        <a href="{{ route('menu.index') }}" class="btn btn-light rounded-pill"><i class="icon-arrow-left52 mr-1"></i> Back</a>
+                                        <a href="{{ url()->previous() }}" class="btn btn-light rounded-pill"><i class="icon-arrow-left52 mr-1"></i> Back</a>
                                     </div>
                                 </div>
                             </div>

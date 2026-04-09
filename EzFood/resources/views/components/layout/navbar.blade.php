@@ -20,11 +20,12 @@
 
         <span class="navbar-text ml-md-3">
             <span class="badge badge-mark border-orange-300 mr-2"></span>
-            Welcome, {{ Auth::check() ? Auth::user()->name : 'Guest' }}!
+            Welcome, {{ Auth::check() ? (Auth::user()->role === 'restaurant' ? (Auth::user()->restaurant->restaurant_name ?? Auth::user()->name) : Auth::user()->name) : 'Guest' }}!
         </span>
 
         <ul class="navbar-nav ml-md-auto">
             @auth
+            @if(Auth::user()->role !== 'restaurant')
             <li class="nav-item dropdown">
                 @php $cart = session('cart', []); $cartCount = collect($cart)->sum('quantity'); $cartTotal = collect($cart)->sum(function($item) { return $item['price'] * $item['quantity']; }); @endphp
                 <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
@@ -87,21 +88,15 @@
                     @endif
                 </div>
             </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-user mr-2"></i>
-                    Account
+            @endif
+            <li class="nav-item">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+                <a href="#" class="navbar-nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="icon-switch2"></i>
+                    <span class="ml-2">Logout</span>
                 </a>
-
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a href="#" class="dropdown-item"><i class="icon-user"></i> Profile</a>
-                    <a href="#" class="dropdown-item"><i class="icon-cog"></i> Settings</a>
-                    <div class="dropdown-divider"></div>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="dropdown-item"><i class="icon-switch2"></i> Logout</button>
-                    </form>
-                </div>
             </li>
             @endauth
         </ul>

@@ -14,7 +14,7 @@
             @csrf
 
             <div>
-                <x-primary-button>
+                <x-primary-button onclick="this.disabled=true; this.form.submit();">
                     {{ __('Resend Verification Email') }}
                 </x-primary-button>
             </div>

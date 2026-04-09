@@ -34,7 +34,7 @@
                         @endif
                         <li class="nav-item">
                             <a href="{{ route('order.index') }}" class="nav-link {{ request()->routeIs('order.*') ? 'active' : '' }}">
-                                <i class="icon-cart2 mr-2"></i>
+                                <i class="icon-cart2"></i>
                                 <span>Orders</span>
                             </a>
                         </li>

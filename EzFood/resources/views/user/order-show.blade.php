@@ -10,18 +10,34 @@
         <div class="content-wrapper">
             <x-layout.page-header title="Order Details" :breadcrumbs="['Orders', 'Order #' . $order->id]" />
             <div class="content">
+
+                @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ session('success') }}
+                </div>
+                @endif
+
                 <div class="card">
                     <div class="card-header bg-white header-elements-sm-inline">
                         <h6 class="card-title font-weight-bold">
                             <i class="icon-file-text2 mr-2 text-primary"></i> Order #{{ $order->id }}
                         </h6>
-                        <div class="header-elements">
+                        <div class="header-elements d-flex align-items-center">
+                            @if($order->status === 'completed')
+                                <a href="{{ route('order.export.pdf', $order) }}" class="btn btn-sm btn-outline-danger rounded-pill mr-2" title="Export PDF">
+                                    <i class="icon-file-pdf mr-1"></i> PDF
+                                </a>
+                                <a href="{{ route('order.export.excel', $order) }}" class="btn btn-sm btn-outline-success rounded-pill mr-3" title="Export Excel">
+                                    <i class="icon-file-excel mr-1"></i> Excel
+                                </a>
+                            @endif
                             <span class="badge badge-{{ $order->status === 'completed' ? 'success' : ($order->status === 'pending' ? 'warning' : 'danger') }} badge-pill p-2">
                                 {{ strtoupper($order->status) }}
                             </span>
                         </div>
                     </div>
-                    
+
                     <div class="card-body">
                         <div class="row mb-4">
                             <div class="col-sm-6">
@@ -48,16 +64,16 @@
                                 </thead>
                                 <tbody>
                                     @php
-                                        $items = json_decode($order->items, true) ?? [];
+                                    $items = json_decode($order->items, true) ?? [];
                                     @endphp
-                                    
+
                                     @forelse($items as $item)
                                     <tr>
                                         <td>
                                             @if(isset($item['image']) && $item['image'])
-                                                <img src="{{ asset('storage/' . $item['image']) }}" width="40" height="40" class="rounded" alt="" style="object-fit: cover;">
+                                            <img src="{{ asset('storage/' . $item['image']) }}" width="40" height="40" class="rounded" alt="" style="object-fit: cover;">
                                             @else
-                                                <div class="bg-light rounded d-flex align-items-center justify-content-center text-muted" style="width: 40px; height: 40px;"><i class="icon-image2"></i></div>
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center text-muted" style="width: 40px; height: 40px;"><i class="icon-image2"></i></div>
                                             @endif
                                         </td>
                                         <td class="font-weight-semibold">{{ $item['name'] ?? 'Unknown Item' }}</td>
@@ -81,21 +97,31 @@
                         </div>
 
                     </div>
-                    
+
                     <div class="card-footer bg-white d-flex justify-content-between align-items-center">
                         <a href="{{ route('order.index') }}" class="btn btn-light rounded-pill">
                             <i class="icon-arrow-left52 mr-1"></i> Back to Orders
                         </a>
-                        
+
                         @if(Auth::user()->role === 'restaurant' && Auth::user()->restaurant?->id === $order->restaurant_id)
-                            @if($order->status === 'pending')
-                                <div>
-                                    <!-- Add forms for restaurant to Accept/Reject order here in the future -->
-                                    <button class="btn btn-success rounded-pill font-weight-bold text-white mr-2">Accept Order</button>
-                                    <button class="btn btn-danger rounded-pill font-weight-bold text-white">Reject Order</button>
-                                </div>
-                            @endif
+                        @if($order->status === 'pending')
+                        <div class="d-flex">
+                            <form action="{{ route('order.accept', $order) }}" method="POST" class="mr-2">
+                                @csrf
+                                <button type="submit" class="btn btn-success rounded-pill font-weight-bold text-white">
+                                    <i class="icon-checkmark2 mr-1"></i> Accept Order
+                                </button>
+                            </form>
+                            <form action="{{ route('order.cancel', $order) }}" method="POST" onsubmit="return confirm('Are you sure you want to reject this order?')">
+                                @csrf
+                                <button type="submit" class="btn btn-danger rounded-pill font-weight-bold text-white">
+                                    <i class="icon-cross2 mr-1"></i> Cancel Order
+                                </button>
+                            </form>
+                        </div>
                         @endif
+                        @endif
+
                     </div>
                 </div>
             </div>

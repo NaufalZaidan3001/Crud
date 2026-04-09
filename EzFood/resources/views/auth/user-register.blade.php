@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,9 +22,9 @@
 </head>
 
 <body>
-   <x-header
+    <x-header
 
-    <div class="page-content">
+        <div class="page-content">
         <div class="content-wrapper">
             <div class="content d-flex justify-content-center align-items-center">
 
@@ -40,47 +41,58 @@
 
                             <div class="form-group form-group-feedback form-group-feedback-left">
                                 <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                                       placeholder="Full name" value="{{ old('name') }}" required autofocus>
+                                    placeholder="Full name" value="{{ old('name') }}" required autofocus>
                                 <div class="form-control-feedback">
                                     <i class="icon-user text-muted"></i>
                                 </div>
                                 @error('name')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="form-group form-group-feedback form-group-feedback-left">
                                 <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                       placeholder="Email" value="{{ old('email') }}" required>
+                                    placeholder="Email" value="{{ old('email') }}" required>
                                 <div class="form-control-feedback">
                                     <i class="icon-mail5 text-muted"></i>
                                 </div>
                                 @error('email')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group form-group-feedback form-group-feedback-left">
+                                <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+                                    placeholder="Phone" value="{{ old('phone') }}" required>
+                                <div class="form-control-feedback">
+                                    <i class="icon-phone text-muted"></i>
+                                </div>
+                                @error('phone')
+                                <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="form-group form-group-feedback form-group-feedback-left">
                                 <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                                       placeholder="Password" required>
+                                    placeholder="Password" required>
                                 <div class="form-control-feedback">
                                     <i class="icon-lock2 text-muted"></i>
                                 </div>
                                 @error('password')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="form-group form-group-feedback form-group-feedback-left">
                                 <input type="password" name="password_confirmation" class="form-control"
-                                       placeholder="Confirm password" required>
+                                    placeholder="Confirm password" required>
                                 <div class="form-control-feedback">
                                     <i class="icon-lock2 text-muted"></i>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block">
+                                <button type="submit" class="btn btn-primary btn-block" onclick="this.disabled=true; this.form.submit();">
                                     Register <i class="icon-circle-right2 ml-2"></i>
                                 </button>
                             </div>
@@ -94,8 +106,9 @@
 
             </div>
 
-            <x-footer/>
+            <x-footer />
         </div>
-    </div>
+        </div>
 </body>
+
 </html>

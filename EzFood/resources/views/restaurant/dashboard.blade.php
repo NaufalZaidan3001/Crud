@@ -54,55 +54,19 @@
                             </div>
 
                             <div class="card-body">
-                                @if($menus->isEmpty())
-                                    <div class="text-center py-5 text-muted">
-                                        <i class="icon-list icon-3x d-block mb-3"></i>
-                                        <p>No menu items yet. <a href="{{ route('menu.create') }}">Add your first item!</a></p>
-                                    </div>
-                                @else
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Item Name</th>
-                                                    <th>Price</th>
-                                                    <th>Availability</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($menus as $menu)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td class="font-weight-semibold">{{ $menu->item_name }}</td>
-                                                    <td>Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
-                                                    <td>
-                                                        @if($menu->availability)
-                                                            <span class="badge badge-success">Available</span>
-                                                        @else
-                                                            <span class="badge badge-danger">Unavailable</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ route('menu.edit', $menu) }}" class="btn btn-sm btn-info rounded-pill mr-1">Edit</a>
-                                                        <form action="{{ route('menu.destroy', $menu) }}" method="POST" class="d-inline"
-                                                              onsubmit="return confirm('Delete this item?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="btn btn-sm btn-danger rounded-pill">Delete</button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="mt-3">
-                                        {{ $menus->links() }}
-                                    </div>
-                                @endif
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="menus-table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item Name</th>
+                                                <th>Price</th>
+                                                <th>Availability</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
@@ -118,7 +82,32 @@
 
     </div>
     <!-- /page content -->
-
+    <script src="{{ asset('global_assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#menus-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('restaurant.dashboard') }}',
+                columns: [
+                    { data: 'id', name: 'id', orderable: false, searchable: false, render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }},
+                    { data: 'item_name', name: 'item_name' },
+                    { data: 'price_formatted', name: 'price', orderable: false, searchable: false },
+                    { data: 'availability_badge', name: 'availability', orderable: false, searchable: false },
+                    { data: 'actions', name: 'actions', orderable: false, searchable: false }
+                ],
+                order: [[1, 'asc']],
+                dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+                language: {
+                    search: '<span>Filter:</span> _INPUT_',
+                    searchPlaceholder: 'Search Menu...',
+                    lengthMenu: '<span>Show:</span> _MENU_',
+                    paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>

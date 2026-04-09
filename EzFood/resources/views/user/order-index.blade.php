@@ -17,17 +17,10 @@
                         </h6>
                     </div>
                     <div class="card-body">
-                        @if($orders->isEmpty())
-                        <div class="text-center py-5 text-muted">
-                            <i class="icon-list icon-3x d-block mb-3"></i>
-                            <p>No orders found.</p>
-                        </div>
-                        @else
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="orders-table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Order ID</th>
                                         <th>Restaurant</th>
                                         <th>Total</th>
@@ -35,34 +28,39 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach($orders as $order)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td class="font-weight-semibold">#{{ $order->id }}</td>
-                                        <td>{{ $order->restaurant->restaurant_name ?? 'Unknown' }}</td>
-                                        <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
-                                        <td>
-                                            <span class="badge badge-{{ $order->status === 'completed' ? 'success' : ($order->status === 'pending' ? 'warning' : 'danger') }}">
-                                                {{ ucfirst($order->status) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('order.show', $order) }}" class="btn btn-sm btn-primary rounded-pill">View Details</a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
                         </div>
-                        <div class="mt-3">{{ $orders->links() }}</div>
-                        @endif
                     </div>
                 </div>
             </div>
             <x-layout.footer />
         </div>
     </div>
+    
+    <script src="{{ asset('global_assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#orders-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('order.index') }}',
+                columns: [
+                    { data: 'id', name: 'id', render: function(data) { return '#' + data; } },
+                    { data: 'restaurant_name', name: 'restaurant_name', orderable: false },
+                    { data: 'total_formatted', name: 'total_price', orderable: false, searchable: false },
+                    { data: 'status_badge', name: 'status', orderable: false, searchable: false },
+                    { data: 'actions', name: 'actions', orderable: false, searchable: false }
+                ],
+                order: [[0, 'desc']],
+                dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+                language: {
+                    search: '<span>Filter:</span> _INPUT_',
+                    searchPlaceholder: 'Search Order ID...',
+                    lengthMenu: '<span>Show:</span> _MENU_',
+                    paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>

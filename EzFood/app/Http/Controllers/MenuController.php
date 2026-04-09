@@ -73,7 +73,7 @@ class MenuController extends Controller
 
         Menu::create($validated);
 
-        return redirect()->route('menu.index')->with('success', 'Menu item added successfully.');
+        return redirect()->route('restaurant.dashboard')->with('success', 'Menu item added successfully.');
     }
 
     /**
@@ -122,7 +122,7 @@ class MenuController extends Controller
 
         $menu->update($validated);
 
-        return redirect()->route('menu.index')->with('success', 'Menu item updated successfully.');
+        return redirect()->route('restaurant.dashboard')->with('success', 'Menu item updated successfully.');
     }
 
     /**
@@ -139,7 +139,7 @@ class MenuController extends Controller
 
         $menu->delete();
 
-        return redirect()->route('menu.index')->with('success', 'Menu item deleted successfully.');
+        return redirect()->route('restaurant.dashboard')->with('success', 'Menu item deleted successfully.');
     }
 
     /**
