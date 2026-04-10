@@ -133,10 +133,6 @@ class MenuController extends Controller
         $this->authorizeRestaurant();
         $this->authorizeOwner($menu);
 
-        if ($menu->image) {
-            Storage::disk('public')->delete($menu->image);
-        }
-
         $menu->delete();
 
         return redirect()->route('restaurant.dashboard')->with('success', 'Menu item deleted successfully.');
