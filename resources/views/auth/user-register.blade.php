@@ -22,13 +22,13 @@
 </head>
 
 <body>
-    <x-header
+    <x-header />
 
-        <div class="page-content">
+    <div class="page-content">
         <div class="content-wrapper">
             <div class="content d-flex justify-content-center align-items-center">
 
-                <form class="login-form" method="POST" action="{{ route('register') }}">
+                <form class="login-form" method="POST" action="{{ route('register.customer.submit') }}">
                     @csrf
 
                     <div class="card mb-0">

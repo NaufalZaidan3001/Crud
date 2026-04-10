@@ -100,16 +100,16 @@
                                                 <td class="text-capitalize">{{ $restaurant->status }}</td>
                                                 <td class="text-center">
                                                     @if($restaurant->status === 'pending')
-                                                            <div class="d-flex justify-content-center">
-                                                                <form method="POST" action="{{ route('admin.approval.approve', $restaurant->id) }}" class="mr-2">
-                                                                    @csrf
-                                                                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                                                </form>
-                                                                <form method="POST" action="{{ route('admin.approval.reject', $restaurant->id) }}">
-                                                                    @csrf
-                                                                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
-                                                                </form>
-                                                            </div>
+                                                    <div class="d-flex justify-content-center">
+                                                        <form method="POST" action="{{ route('admin.approval.approve', $restaurant->id) }}" class="mr-2">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                                        </form>
+                                                        <form method="POST" action="{{ route('admin.approval.reject', $restaurant->id) }}">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                                        </form>
+                                                    </div>
                                                     @else
                                                     <span class="badge badge-{{ $restaurant->status === 'approved' ? 'success' : 'danger' }}">{{ ucfirst($restaurant->status) }}</span>
                                                     @endif

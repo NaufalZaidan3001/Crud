@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,10 +26,12 @@
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
+
         .role-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+
         .hero-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -54,57 +57,65 @@
             <div class="container py-5">
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-10">
-                        <h2 class="text-center mb-4">Choose Which Account to Login</h2>
-                        <p class="text-center text-muted mb-5">
-                            Select how you'd like to access EzFood
-                        </p>
+                        <h2 class="text-center mb-4">Please login before proceeding to EzFood</h2>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
-                    <!-- Customer Role Card -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card role-card h-100">
-                            <div class="card-body text-center p-4">
-                                <div class="mb-3">
-                                    <i class="icon-user icon-3x text-primary"></i>
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
+                                <div class="text-center mb-3">
+                                    <i class="icon-reading icon-2x text-slate-300 border-slate-300 border-3 rounded-round p-3 mb-3 mt-1"></i>
+                                    <span class="d-block text-muted">Enter your credentials below</span>
                                 </div>
-                                <h5 class="card-title mb-3">Customer</h5>
-                                <p class="card-text text-muted mb-4">
-                                    Order food from your favorite restaurants and track your orders
-                                </p>
-                                <div class="btn-group-vertical w-100" role="group">
-                                    <a href="{{ route('login') }}" class="btn btn-primary btn-sm mb-2">
-                                        <i class="icon-enter mr-1"></i> Login
-                                    </a>
-                                    <a href="{{ route('register') }}" class="btn btn-outline-primary btn-sm">
-                                        <i class="icon-user-plus mr-1"></i> Register
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Restaurant Owner Role Card -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card role-card h-100">
-                            <div class="card-body text-center p-4">
-                                <div class="mb-3">
-                                    <i class="fas fa-shopping-basket fa-3x text-success"></i>
+                                <div class="form-group form-group-feedback form-group-feedback-left">
+                                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                                        placeholder="Email" value="{{ old('email') }}" required autofocus>
+                                    <div class="form-control-feedback">
+                                        <i class="icon-mail5 text-muted"></i>
+                                    </div>
+                                    @error('email')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <h5 class="card-title mb-3">Restaurant Owner</h5>
-                                <p class="card-text text-muted mb-4">
-                                    Manage your restaurant, menu items, and customer orders
-                                </p>
-                                <div class="btn-group-vertical w-100" role="group">
-                                    <a href="{{ route('restaurant.login') }}" class="btn btn-success btn-sm mb-2">
-                                        <i class="icon-enter mr-1"></i> Login
-                                    </a>
-                                    <a href="{{ route('restaurant.register') }}" class="btn btn-outline-success btn-sm">
-                                        <i class="icon-user-plus mr-1"></i> Register
-                                    </a>
+
+                                <div class="form-group form-group-feedback form-group-feedback-left">
+                                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                                        placeholder="Password" required>
+                                    <div class="form-control-feedback">
+                                        <i class="icon-lock2 text-muted"></i>
+                                    </div>
+                                    @error('password')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                            </div>
+
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="remember">
+                                            Remember me
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        Sign in <i class="icon-circle-right2 ml-2"></i>
+                                    </button>
+                                </div>
+
+                                <div class="text-center">
+                                    @if (Route::has('password.request'))
+                                    <a href="{{ route('password.request') }}">Forgot password?</a>
+                                    @endif
+                                    <br>
+                                    <a href="{{ route('register') }}">Didn't have an account yet?</a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -114,4 +125,5 @@
 
     <x-footer />
 </body>
+
 </html>

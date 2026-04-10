@@ -10,10 +10,11 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\MenuRegisterController;
 use App\Http\Controllers\Auth\Restaurant\RestaurantRegisterController;
 use App\Http\Controllers\Auth\Restaurant\RestaurantLoginCheck;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\LoginCheckController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MenuController;
@@ -26,23 +27,21 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [LoginCheckController::class, 'store']);
 
-    Route::get('register', [RegisteredUserController::class, 'create'])
+    Route::get('register', [MenuRegisterController::class, 'create'])
         ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::get('register/customer', [MenuRegisterController::class, 'createCustomer'])
+        ->name('register.customer');
+
+    Route::post('register/customer', [MenuRegisterController::class, 'storeCustomer'])
+        ->name('register.customer.submit');
 
     Route::get('restaurant/register', [RestaurantRegisterController::class, 'create'])
         ->name('restaurant.register');
 
     Route::post('restaurant/register', [RestaurantRegisterController::class, 'store']);
-
-    Route::get('restaurant/login', [RestaurantLoginCheck::class, 'showRestaurantLogin'])
-        ->name('restaurant.login');
-
-    Route::post('restaurant/login', [RestaurantLoginCheck::class, 'loginRestaurant'])
-        ->name('restaurant.login.submit');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
@@ -108,7 +107,7 @@ Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 
 // Protected admin routes
-Route::middleware(['auth', 'verified_or_admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/dashboard/updateStatus/{id}', [AdminDashboardController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::post('/admin/approval/{id}/approve', [AdminDashboardController::class, 'approveRestaurant'])->name('admin.approval.approve');

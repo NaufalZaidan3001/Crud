@@ -134,7 +134,7 @@
                             </div>
 
                             <div class="text-center">
-                                <a href="{{ route('restaurant.login') }}">Already have an account? Sign in</a>
+                                <a href="{{ route('login') }}">Already have an account? Sign in</a>
                             </div>
                         </div>
                     </div>

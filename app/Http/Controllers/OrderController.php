@@ -18,7 +18,10 @@ class OrderController extends Controller
 
         if ($request->ajax()) {
             if ($user->role === 'restaurant' && $user->restaurant) {
-                $query = Order::with('restaurant', 'user')->where('restaurant_id', $user->restaurant->id);
+                // Show orders RECEIVED by the restaurant AND orders PLACED by the user as a customer
+                $query = Order::with('restaurant', 'user')
+                    ->where('restaurant_id', $user->restaurant->id)
+                    ->orWhere('user_id', $user->id);
             } else {
                 $query = Order::with('restaurant', 'user')->where('user_id', $user->id);
             }
@@ -53,12 +56,12 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
-        // Ensure the user actually owns this order or is the restaurant that received it
-        if ($user->role === 'customer' && $order->user_id !== $user->id) {
-            abort(403);
-        }
-        if ($user->role === 'restaurant' && $order->restaurant_id !== $user->restaurant?->id) {
-            abort(403);
+        // Access if: User is the customer WHO PLACED the order OR User is the OWNER of the restaurant receiving it
+        $isCustomerOwner = $order->user_id === $user->id;
+        $isRestaurantOwner = $user->role === 'restaurant' && $order->restaurant_id === $user->restaurant?->id;
+
+        if (!$isCustomerOwner && !$isRestaurantOwner) {
+            abort(403, 'Unauthorized access to this order.');
         }
 
         return view('user.order-show', compact('order'));
@@ -92,12 +95,32 @@ class OrderController extends Controller
 
     public function exportPdf(Order $order)
     {
+        $user = Auth::user();
+
+        // Access if: User is the customer WHO PLACED the order OR User is the OWNER of the restaurant receiving it
+        $isCustomerOwner = $order->user_id === $user->id;
+        $isRestaurantOwner = $user->role === 'restaurant' && $order->restaurant_id === $user->restaurant?->id;
+
+        if (!$isCustomerOwner && !$isRestaurantOwner) {
+            abort(403, 'Unauthorized access.');
+        }
+
         $pdf = Pdf::loadView('exports.order-pdf', compact('order'));
         return $pdf->download('Invoice_Order_' . $order->id . '.pdf');
     }
 
     public function exportExcel(Order $order)
     {
+        $user = Auth::user();
+
+        // Access if: User is the customer WHO PLACED the order OR User is the OWNER of the restaurant receiving it
+        $isCustomerOwner = $order->user_id === $user->id;
+        $isRestaurantOwner = $user->role === 'restaurant' && $order->restaurant_id === $user->restaurant?->id;
+
+        if (!$isCustomerOwner && !$isRestaurantOwner) {
+            abort(403, 'Unauthorized access.');
+        }
+
         return Excel::download(new OrderExport($order), 'Invoice_Order_' . $order->id . '.xlsx');
     }
 }
