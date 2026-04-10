@@ -57,7 +57,7 @@
             <div class="container py-5">
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-10">
-                        <h2 class="text-center mb-4">Please register for before proceeding EzFood</h2>
+                        <h2 class="text-center mb-4">Please register before proceeding to EzFood</h2>
                     </div>
                 </div>
 
@@ -98,9 +98,9 @@
                 <div class="text-center mt-4">
                     <p class="text-muted">Already have an account? <a href="{{ route('login') }}" class="text-primary font-weight-bold">Sign in</a></p>
                 </div>
-                </div>
             </div>
         </div>
+    </div>
     </div>
 
     <x-footer />
